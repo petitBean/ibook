@@ -6,6 +6,8 @@ import com.wxz.ibook.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Wangxingze
  * @date 2019-06-07 23:13
@@ -24,5 +26,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public BookCategory save(BookCategory bookCategory){
         return categoryRepository.save(bookCategory);
+    }
+
+    @Override
+    public List<BookCategory> findAll(){
+        return categoryRepository.findAll();
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -23,17 +24,17 @@ public class BookInfoServiceImplTest {
     @Test
     public void save() {
         BookInfo bookInfo=new BookInfo();
-        bookInfo.setBookAuthor("谢希仁");
-        bookInfo.setBookDescribe("高等学校计算机教材");
-        bookInfo.setBookEdition("第七版");
+        bookInfo.setBookAuthor("文旭");
+        bookInfo.setBookDescribe("高校英语教材");
+        bookInfo.setBookEdition("第1版");
         bookInfo.setBookIcon("#");
         bookInfo.setBookId(KeyUtil.getUniqueKey());
-        bookInfo.setBookName("计算机网络");
-        bookInfo.setBookPress("电子工业出版社");
+        bookInfo.setBookName("新世界交互英语");
+        bookInfo.setBookPress("清华大学出版社");
         bookInfo.setCategoryType(1);
         bookInfo.setBookStock(200);
-        bookInfo.setPublicTime("2001年10月1日");
-        bookInfo.setBookPrice(new BigDecimal(45));
+        bookInfo.setPublicTime("2014年6月");
+        bookInfo.setBookPrice(new BigDecimal(60.0));
         bookInfo.setSellerId("1559924464438959779");
         BookInfo re=bookInfoService.save(bookInfo);
         Assert.assertNotNull(re);
@@ -50,4 +51,13 @@ public class BookInfoServiceImplTest {
         List<BookInfo> list=bookInfoService.findListByCategoryType(1);
         Assert.assertEquals(2,list.size());
     }
+
+    @Test
+    public void findListByCategoryList(){
+        List<Integer> categoryList= Arrays.asList(1,2);
+        List<BookInfo> list=bookInfoService.findListByCategoryList(categoryList);
+        Assert.assertEquals(3,list.size());
+    }
+
+
 }

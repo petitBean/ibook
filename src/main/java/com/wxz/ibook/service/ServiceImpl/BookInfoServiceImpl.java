@@ -27,6 +27,11 @@ public class BookInfoServiceImpl implements BookInfoService {
         return bookInfoRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public List<BookInfo> findAll(){
+        return bookInfoRepository.findAll();
+    }
+
     /**
      * 查询同一个类目的所有书籍
      * @param categoryType
@@ -35,8 +40,11 @@ public class BookInfoServiceImpl implements BookInfoService {
     @Override
     public List<BookInfo> findListByCategoryType(Integer categoryType){
         return bookInfoRepository.findAllByCategoryType(categoryType);
-       // return bookInfoRepository.findAllByCategory_type(categoryType);
-        //return null;
+    }
+
+    @Override
+    public List<BookInfo> findListByCategoryList(List<Integer> categoryList){
+        return bookInfoRepository.findBookInfoByCategoryTypeIn(categoryList);
     }
 
 

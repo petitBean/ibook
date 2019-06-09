@@ -49,5 +49,4 @@ public class OrderDetail {
      */
     private Date updateTime;
 
-
 }

@@ -31,11 +31,11 @@ public class OrderMasterServiceImplTest {
         OrderMaster orderMaster=new OrderMaster();
         orderMaster.setBuyerId("1559928114660926208");
         orderMaster.setBuyerAccount("123456");
-        orderMaster.setBuyerAddress("云南省昆明市官渡区");
+        orderMaster.setBuyerAddress("云南省昆明市寻甸县");
         orderMaster.setBuyerName("wxz");
         orderMaster.setBuyerPhone("13129965536");
         orderMaster.setOrderId(KeyUtil.getUniqueKey());
-        orderMaster.setOrderAmount(new BigDecimal(70));
+        orderMaster.setOrderAmount(new BigDecimal(60.5));
         OrderMaster re=orderMasterService.save(orderMaster);
         Assert.assertNotNull(re);
 

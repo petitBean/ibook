@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.List;
+
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
@@ -29,5 +31,11 @@ public class CategoryServiceImplTest {
         bookCategory.setCategoryType(2);
         BookCategory re=categoryService.save(bookCategory);
         Assert.assertNotNull(re);
+    }
+
+    @Test
+    public void findAll(){
+        List<BookCategory> list=categoryService.findAll();
+        Assert.assertEquals(3,list.size());
     }
 }

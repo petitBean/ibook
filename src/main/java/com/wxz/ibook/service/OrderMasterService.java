@@ -2,9 +2,13 @@ package com.wxz.ibook.service;
 
 import com.wxz.ibook.domain.OrderMaster;
 
+import java.util.List;
+
 public interface OrderMasterService {
 
-    public OrderMaster findOneById(String id);
+     OrderMaster findOneById(String id);
 
-    public OrderMaster save(OrderMaster orderMaster);
+     OrderMaster save(OrderMaster orderMaster);
+
+     List<OrderMaster> findAll();
 }

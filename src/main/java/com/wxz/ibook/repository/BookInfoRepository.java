@@ -19,4 +19,11 @@ public interface BookInfoRepository extends JpaRepository<BookInfo,String> {
     //List<BookInfo> findByCategory_type(Integer category_type);
     List<BookInfo> findAllByCategoryType(Integer categoryType);
 
+    /**
+     * 查询所有属于列表中类目的书籍
+     * @param categoryList
+     * @return
+     */
+    List<BookInfo> findBookInfoByCategoryTypeIn(List<Integer> categoryList);
+
 }
