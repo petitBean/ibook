@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -34,6 +35,10 @@ public class OrderMasterServiceImpl implements OrderMasterService {
     @Override
     public List<OrderMaster> findAll(){
         return orderMasterRepository.findAll();
+    }
+
+    public  OrderMaster createOrder(Map<String,Object> cartMap){
+        //TODO
     }
 
 }

@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 
 /**
  * @author Wangxingze
@@ -12,7 +13,10 @@ import javax.persistence.Id;
  */
 @Data
 @Entity
-public class Buyer {
+public class Buyer implements Serializable {
+
+
+    private static final long serialVersionUID = -4178001309655755205L;
     /**
      * id
      */

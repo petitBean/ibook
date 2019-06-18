@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
@@ -16,11 +17,12 @@ import java.util.Date;
  */
 @Data
 @Entity
-public class BookInfo {
+public class BookInfo implements Serializable {
 
+    private static final long serialVersionUID = 7323598003689004L;
     /*8
-    书籍id
-     */
+        书籍id
+         */
     @Id
     private String  bookId;
 

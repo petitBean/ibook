@@ -14,9 +14,18 @@ public interface BookInfoService {
 
      List<BookInfo> findAll();
 
-    //查询某个类目得书籍
+     //查找以书名redx开头的所有书籍
+    List<BookInfo> findAllByName(String regx);
+
+    //书名模糊查询
+   List<BookInfo> findAllByBookNameLike(String regx);
+
+    //查询某个类目的书籍
     List<BookInfo> findListByCategoryType(Integer integer);
 
     //查询多个类目书籍
     List<BookInfo> findListByCategoryList(List<Integer> categoryList);
+
+    //查询多个id书籍
+    List<BookInfo> findListByBookIdList(List<String> bookIdList);
 }

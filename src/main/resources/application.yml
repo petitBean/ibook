@@ -12,3 +12,9 @@ spring:  #生产环境
     hibernate:
       ddl-auto: update
     show-sql: true
+
+
+#
+projecturl:
+  ibook: http://127.0.0.1:8080/ibook
+  bookImageSavePath: D:/Gitrepository/ibook/src/main/resources/static/photo/books/

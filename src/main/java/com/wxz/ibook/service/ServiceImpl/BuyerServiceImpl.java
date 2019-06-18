@@ -6,6 +6,8 @@ import com.wxz.ibook.service.BuyerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Wangxingze
  * @date 2019-06-07 22:19
@@ -17,14 +19,23 @@ public class BuyerServiceImpl implements BuyerService {
     private BuyerRepository buyerRepository;
 
     @Override
-    public Buyer findOne(String buyerId){
+    public Buyer findOne(String buyerId)throws Exception{
         return buyerRepository.findById(buyerId).orElse(null);
     }
 
     @Override
-    public Buyer save(Buyer buyer){
+    public Buyer save(Buyer buyer)throws Exception{
         return buyerRepository.save(buyer);
     }
 
+    @Override
+    public List<Buyer> findListByBuyerPhone(String buyerPhone)throws Exception{
+        return buyerRepository.findBuyerByBuyerPhone(buyerPhone);
+    }
+
+    @Override
+   public Buyer findOneByBuyerPhone(String buyerPhone) throws Exception{
+        return buyerRepository.findByBuyerPhone(buyerPhone);
+    }
 
 }

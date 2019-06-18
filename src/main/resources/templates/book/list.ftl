@@ -4,8 +4,8 @@
     <title>图书列表</title>
 
     <link href="https://cdn.bootcss.com/twitter-bootstrap/3.0.1/css/bootstrap.min.css" rel="stylesheet">
-    <link href="http://127.0.0.1:8080/ibook/css/search.css" rel="stylesheet">
-    <link href="http://127.0.0.1:8080/ibook/css/ul.css" rel="stylesheet">
+    <link href="/ibook/css/search.css" rel="stylesheet">
+    <link href="/ibook/css/ul.css" rel="stylesheet">
 
 </head>
 
@@ -15,13 +15,13 @@
     <div  id="topBar1" style="float: right">
         <ul>
             <li>
-                <a href="#">登录</a>
+                <a href="/ibook/buyer/user/tologin">登录</a>
             </li>
             <li>
                 <a href="#">注册</a>
             </li>
             <li>
-                <a href="#">退出</a>
+                <a href="/ibook/buyer/user/logout">退出</a>
             </li>
         </ul>
     </div>
@@ -55,16 +55,22 @@
                                 <a href="#">Link</a>
                             </li>
                         </ul>
-                        <form action="" class="navbar-form navbar-left parent">
-                            <input type="text" class="search" placeholder="搜索">
-                            <input type="button" name="" id="" class="btn btn1 btn-default" >
+                        <form class="navbar-form navbar-left" role="search" action="/ibook/buyer/book/searchbybookname" method="post">
+                            <div class="form-group">
+                                <input type="text" name="bookName" class="form-control" />
+                            </div> <button type="submit" class="btn btn-default">搜索</button>
                         </form>
+                        <!--
+                        <form action="/buyer/book/sesrch" class="navbar-form navbar-left parent" method="post">
+                            <input type="text" class="search" placeholder="搜索">
+                            <input type="button" name="bookName" id="" class="btn btn1 btn-default" >
+                        </form>-->
                         <ul class="nav navbar-nav navbar-right">
                             <li>
                                 <a href="#">我的订单</a>
                             </li>
                             <li class="active">
-                                <a href="#">我的购物车</a>
+                                <a href="/ibook/buyer/book/cart/showcart">我的购物车</a>
                             </li>
                         </ul>
                     </div>
@@ -84,11 +90,15 @@
     <div style="height: 900px ;width: 200px; ;float: left;background-color: darkred;margin: 0px 0px 0px 48px">
      <div id="outerUl" style="margin: 50px 0px 0px 0px">
        <ul>
+           <li >
+               <a href="/ibook/buyer/book/list">&nbsp全部类目</a>
+           </li>
+           <#if categoryList?? &&(categoryList?size>0)>
            <#list categoryList as category>
                <li >
-                   <a href="#">&nbsp${category.categoryName}</a>
+                   <a href="/ibook/buyer/book/searchbycategory?categoryType=${category.categoryType}">&nbsp${category.categoryName}</a>
                </li>
-           </#list>
+           </#list></#if>
        </ul>
      </div>
     </div>
@@ -99,12 +109,13 @@
         <div class="col-md-12 column">
             <table class="table" style="width: 600px;margin: 20px">
                 <tbody>
+                <#if bookList?? &&(bookList?size>0)>
                  <#list bookList as book>
                      <#if (book_index%4==0)>
                          <tr>
                      </#if>
                          <td style="height: 200px;width: 200px ;text-align: center; ">
-                              <a style="padding: 30px 30px 30px 30px;margin:10px 10px 10px 10px"><img height="150" width="150" src="http://127.0.0.1:8080/ibook/photo/wxz.jpeg" alt="加载中..." ></a><br/><br>
+                              <a href="/ibook/buyer/book/bookdetail?bookId=${book.bookId}" style="padding: 30px 30px 30px 30px;margin:10px 10px 10px 10px"><img height="150" width="150" src="${book.bookIcon}" alt="加载中..." ></a><br/><br>
                                ${book.bookName}<br>
                               <textarea style="border: none"> ${book.bookDescribe}</textarea><br>
                               <a style="color: red">￥ ${book.bookPrice} </a><br><br>
@@ -112,7 +123,7 @@
                      <#if (book_index%4==3)>
                          <tr>
                      </#if>
-                 </#list>
+                 </#list></#if>
                 </tbody>
             </table>
         </div>
@@ -121,5 +132,30 @@
 
 </div>
 </body>
+
+<script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    function getBuyerPhone() {
+        var name="buyer_id"+"=";
+        var buyerPhone = "";//返回值
+        var cookies=document.cookie;
+        var start=cookies.indexOf(name);
+        if (start!=-1){
+            start+=name.length;
+            end = document.cookie.indexOf(";", start);
+            alert(start);
+            alert(end);
+            if (end == -1)
+                end = document.cookie.length;
+            //unescape() 函数可对通过 escape() 编码的字符串进行解码。
+            buyerPhone=unescape(document.cookie.substring(start, end));
+            alert(buyerPhone);
+
+        }
+        return buyerPhone;
+    }
+
+</script>
 
 </html>

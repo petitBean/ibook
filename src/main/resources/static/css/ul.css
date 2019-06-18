@@ -38,10 +38,11 @@
 }
 
 #topBar a:hover{
-
     color: red;
 }
-
+#topBar a{
+    color: black;
+}
 h1{
     font-family: 华文琥珀;
     font-size: 40px;

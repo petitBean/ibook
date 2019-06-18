@@ -22,7 +22,7 @@
     height: 35px;
     width: 35px;
     position: absolute;
-    background: url("http://127.0.0.1:8080/ibook/photo/search.png");
+    background: url("/ibook/photo/search.png");
     top: 6px;
     left: 260px;
     outline: none;

@@ -42,10 +42,37 @@ public class BookInfoServiceImpl implements BookInfoService {
         return bookInfoRepository.findAllByCategoryType(categoryType);
     }
 
+    /**
+     * 查询属于几个类目的书籍
+     * @param categoryList
+     * @return
+     */
     @Override
     public List<BookInfo> findListByCategoryList(List<Integer> categoryList){
         return bookInfoRepository.findBookInfoByCategoryTypeIn(categoryList);
     }
 
+    /**
+     * 查找书名头部与regx匹配的书籍
+     * @param regx
+     * @return
+     */
+    @Override
+    public List<BookInfo> findAllByBookNameLike(String regx){
+        return bookInfoRepository.findBookInfoByBookNameLike(regx);
+    }
 
+    /**
+     *
+     * @return
+     */
+    @Override
+    public List<BookInfo> findAllByName(String name){
+        return bookInfoRepository.findBookInfoByBookName(name);
+    }
+
+    @Override
+    public  List<BookInfo> findListByBookIdList(List<String> bookIdList){
+        return bookInfoRepository.findBookInfoByBookIdIn(bookIdList);
+    }
 }
