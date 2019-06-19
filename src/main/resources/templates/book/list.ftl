@@ -67,7 +67,7 @@
                         </form>-->
                         <ul class="nav navbar-nav navbar-right">
                             <li>
-                                <a href="#">我的订单</a>
+                                <a href="/ibook/buyer/book/cart/ordermasterlist">我的订单</a>
                             </li>
                             <li class="active">
                                 <a href="/ibook/buyer/book/cart/showcart">我的购物车</a>
@@ -115,9 +115,11 @@
                          <tr>
                      </#if>
                          <td style="height: 200px;width: 200px ;text-align: center; ">
-                              <a href="/ibook/buyer/book/bookdetail?bookId=${book.bookId}" style="padding: 30px 30px 30px 30px;margin:10px 10px 10px 10px"><img height="150" width="150" src="${book.bookIcon}" alt="加载中..." ></a><br/><br>
-                               ${book.bookName}<br>
-                              <textarea style="border: none"> ${book.bookDescribe}</textarea><br>
+                              <a href="/ibook/buyer/book/bookdetail?bookId=${book.bookId}" style="padding: 30px 30px 30px 30px;margin:10px 10px 10px 10px"><img height="150" width="150" src="${book.bookIcon}" alt="加载中..." ></a><br/>
+                             <br style="text-align: center">
+                               ${book.bookName}
+                             <br>
+                              <textarea style="border: none;width: 230px;height: 100px;font-family: 新宋体;font-size: 10px">简介： ${book.bookDescribe}</textarea><br>
                               <a style="color: red">￥ ${book.bookPrice} </a><br><br>
                           </td>
                      <#if (book_index%4==3)>

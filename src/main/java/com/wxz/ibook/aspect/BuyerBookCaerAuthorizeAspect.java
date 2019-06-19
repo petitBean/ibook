@@ -24,8 +24,9 @@ import javax.servlet.http.HttpServletRequest;
 @Aspect
 public class BuyerBookCaerAuthorizeAspect {
 
-    @Pointcut("execution(public * com.wxz.ibook.controller.BuyerBookCartController*.*(..))")
+    @Pointcut("execution(public * com.wxz.ibook.controller.BuyerBookCartController*.*(..))" )
     //切入点,排除对用户操作的过滤，因为有登陆等
+    //加上"&& execution(public * com.wxz.ibook.controller.OrderController*.*(..))"
     public void verify(){
     }
 

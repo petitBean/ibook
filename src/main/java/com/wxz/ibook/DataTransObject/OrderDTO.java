@@ -1,27 +1,20 @@
-package com.wxz.ibook.domain;
+package com.wxz.ibook.DataTransObject;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wxz.ibook.enums.OrderStatusEnum;
 import com.wxz.ibook.enums.PayStatusEnum;
+import com.wxz.ibook.utils.EnumUtil;
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * @author Wangxingze
- * @date 2019-06-07 18:58
+ * @date 2019-06-19 17:39
  */
 @Data
-@Entity
-@DynamicUpdate
-public class OrderMaster {
-    /**
-     * id
-     */
-    @Id
+public class OrderDTO {
     private String  orderId;
     /**
      * d订单金额
@@ -64,4 +57,15 @@ public class OrderMaster {
      * 更新时间
      */
     private Date updateTime;
+
+    @JsonIgnore//在RestController中该对象会作为Json返回，为了忽略该字段加上该注释
+    public OrderStatusEnum getOrderStatusEnum(){
+        // return OrderStatusEnum.getByCode(payStatus);
+        return EnumUtil.getEnumByCode(orderStatus,OrderStatusEnum.class);
+    }
+
+    @JsonIgnore
+    public PayStatusEnum getPayStatusEnum(){
+        return EnumUtil.getEnumByCode(payStatus,PayStatusEnum.class);
+    }
 }

@@ -12,6 +12,9 @@ public interface BookInfoService {
     //存储
      BookInfo save(BookInfo bookInfo);
 
+    //存储list
+    List<BookInfo> saveList(List<BookInfo> bookInfoList);
+
      List<BookInfo> findAll();
 
      //查找以书名redx开头的所有书籍

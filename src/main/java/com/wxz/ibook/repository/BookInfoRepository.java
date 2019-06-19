@@ -46,4 +46,5 @@ public interface BookInfoRepository extends JpaRepository<BookInfo,String> {
     @Query(value = "select * from book_info where book_name like %?1%",nativeQuery = true)
     List<BookInfo> findBookInfoByBookNameLike(String regx);
 
+
 }

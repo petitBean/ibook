@@ -1,12 +1,20 @@
 package com.wxz.ibook.controller;
 
 import com.wxz.ibook.DataTransObject.BookCart;
+import com.wxz.ibook.DataTransObject.OrderDTO;
 import com.wxz.ibook.config.ProjectConfig;
 import com.wxz.ibook.constrant.CookieConstrant;
 import com.wxz.ibook.constrant.SessionConstrant;
+import com.wxz.ibook.converter.OrderMasterConverter;
 import com.wxz.ibook.domain.BookInfo;
-import com.wxz.ibook.service.ServiceImpl.BookInfoServiceImpl;
+import com.wxz.ibook.domain.Buyer;
+import com.wxz.ibook.domain.OrderDetail;
+import com.wxz.ibook.domain.OrderMaster;
+import com.wxz.ibook.enums.ExceptionEnum;
+import com.wxz.ibook.exception.IbookException;
+import com.wxz.ibook.service.ServiceImpl.*;
 import com.wxz.ibook.utils.CookieUtil;
+import com.wxz.ibook.utils.KeyUtil;
 import com.wxz.ibook.utils.SessionUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.lang.reflect.Array;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -35,6 +44,14 @@ public class BuyerBookCartController {
     private BookInfoServiceImpl bookInfoService;
     @Autowired
     private ProjectConfig projectConfig;
+    @Autowired
+    private BuyerServiceImpl buyerService;
+    @Autowired
+    private OrderDetailServiceImpl orderDetailService;
+    @Autowired
+    private OrderMasterServiceImpl orderMasterService;
+    @Autowired
+    private BookCartServiceImpl bookCartService;
 
 
     /**
@@ -67,13 +84,13 @@ public class BuyerBookCartController {
         if (map==null){
             map=new HashMap<>();
         }
-        //4.添加货物（判断库存等）
-        BookInfo bookInfo=bookInfoService.findOneById(bookId);
+        //4.添加货物（判断库存等），此处不用
+       /* BookInfo bookInfo=bookInfoService.findOneById(bookId);
         if(bookInfo.getBookStock()<bookQuantity){
             resultMap.put("url","/ibook/buyer/book/list");
             resultMap.put("msg","库存不够！");
             return new ModelAndView("common/error",resultMap);
-        }
+        }*/
         if (map.containsKey(bookId)){
             bookQuantity+=map.get(bookId);
         }
@@ -169,9 +186,103 @@ public class BuyerBookCartController {
                .concat("/buyer/book/cart/showcart")));
     }
 
-    @GetMapping(value = "/pay")
-    public ModelAndView pay(HttpServletRequest request){
-        //
+    //创建订单
+    @GetMapping(value = "/createorder")
+    public ModelAndView pay(@RequestParam(value = "totalAmount")String totalAmonut,
+                            HttpServletRequest request,
+                            Map<String,Object> map){
+
+        //1.数据检查
+       List<String> bookIdList=SessionUtil.getBookIdList(request);
+        if (bookIdList==null) {
+            log.error("【创建订单】sessionUtil返回为空");
+            map.put("msg","系统错误！重新登录！");
+            map.put("url","/ibook/buyer/user/logout");
+            return new ModelAndView("common/error",map);
+        }
+        BigDecimal amount;
+        try{
+            amount=BigDecimal.valueOf(Double.parseDouble(totalAmonut));
+        }
+        catch(Exception e){
+            log.error("【创建订单】订单金额状态不正确！orderAmount={}",totalAmonut);
+            map.put("msg","订单金额状态不正确！重新登录！");
+            map.put("url","/ibook/buyer/user/logout");
+            return new ModelAndView("common/error",map);
+        }
+        //2.查询用户
+        String buyerPhone=CookieUtil.get(request,CookieConstrant.BUYER_ID).getValue();
+        //判断号码
+        if (buyerPhone==null){
+            log.error("【创建订单】cookie中查询不到用户信息,attributeName={}",CookieConstrant.BUYER_ID);
+            map.put("msg","用户登录状态不正确！重新登录！");
+            map.put("url","/ibook/buyer/user/logout");
+            return new ModelAndView("common/error",map);
+        }
+        Buyer buyer;
+        try {
+            buyer = buyerService.findOneByBuyerPhone(buyerPhone);
+            if (buyer==null){
+                log.error("【创建订单】数据库查询不到用户！buyerPhonr={}",buyerPhone);
+                throw new IbookException(ExceptionEnum.BUYER_INFO_NULL);
+            }
+        }
+        catch (Exception e){
+            map.put("msg","用户信息不正确！重新登录！");
+            map.put("url","/ibook/buyer/user/logout");
+            return new ModelAndView("common/error",map);
+        }
+        //创建ordermaster
+        OrderMaster orderMaster=orderMasterService.create(buyer);
+        //设置金额
+        orderMaster.setOrderAmount(amount);
+        //查询书籍id信息
+        Map<String,Object> bookMap=SessionUtil.getBookMap(request);
+        List<BookInfo> bookInfoList=bookInfoService.findListByBookIdList(bookIdList);
+        Map<String, Object> result=new HashMap<>();
+        if(bookInfoList!=null){
+            //新建订单详情
+            try {
+                 result = orderDetailService.create(bookMap, bookInfoList, amount, orderMaster.getOrderId());
+                //3.提交数据
+                bookCartService.saveOrderMasterAndOrderDetail(result,orderMaster);
+            }
+            catch (Exception e){
+                log.error("【创建订单】 系统出错！errorMessage={}",e.getMessage());
+                map.put("msg",e.getMessage());
+                map.put("url","/ibook/buyer/user/logout");
+                return new ModelAndView("common/error",map);
+            }
+        }
+        //4.qin清空购物车
+        SessionUtil.clear(request,SessionConstrant.BOOK_MAP);
+        map.put("msg","前往支付");
+        map.put("url","/ibook/buyer/book/list");
+       return new ModelAndView("common/success",map);
+        //TODO 5.支付
+
     }
 
-}
+    @GetMapping(value = "/ordermasterlist")
+    public ModelAndView orderMasterList(HttpServletRequest request,Map<String,Object> map){
+        String buyerPhone=CookieUtil.get(request,CookieConstrant.BUYER_ID).getValue();
+        List<OrderMaster> orderMasterList=orderMasterService.findListByBuyerPhone(buyerPhone);
+        List<OrderDTO> orderDTOList= OrderMasterConverter.convert(orderMasterList);
+        map.put("orderDTOList",orderMasterList);
+        return new ModelAndView("order/list",map);
+    }
+
+    @GetMapping(value = "/detail")
+    public ModelAndView detail(@RequestParam(value = "orderId")String orderId,
+                               Map<String,Object> map){
+        List<String> oderIdList=Arrays.asList(orderId);
+        List<OrderDetail> orderDetailList=orderDetailService.findListByOrderIdList(oderIdList);
+        OrderMaster orderDTO=orderMasterService.findOneById(orderId);
+        map.put("detailList",orderDetailList);
+        map.put("orderDTO",orderDTO);
+        return new ModelAndView("order/detail",map);
+    }
+
+
+
+}//con

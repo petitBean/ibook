@@ -22,6 +22,12 @@ public class BookInfoServiceImpl implements BookInfoService {
     public BookInfo save(BookInfo bookInfo){
         return bookInfoRepository.save(bookInfo);
     }
+
+    //存储list
+    @Override
+    public  List<BookInfo>  saveList(List<BookInfo> bookInfoList){
+        return bookInfoRepository.saveAll(bookInfoList);
+    }
     @Override
     public BookInfo findOneById(String id){
         return bookInfoRepository.findById(id).orElse(null);

@@ -20,6 +20,6 @@
 
 </body>
 <script>
-    setTimeout('location.href="${url}"',3000);
+    setTimeout('location.href="${url}"',1000);
 </script>
 </html>
