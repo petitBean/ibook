@@ -85,12 +85,17 @@ public class BuyerBookCartController {
             map=new HashMap<>();
         }
         //4.添加货物（判断库存等），此处不用
-       /* BookInfo bookInfo=bookInfoService.findOneById(bookId);
+       BookInfo bookInfo=bookInfoService.findOneById(bookId);
         if(bookInfo.getBookStock()<bookQuantity){
             resultMap.put("url","/ibook/buyer/book/list");
             resultMap.put("msg","库存不够！");
             return new ModelAndView("common/error",resultMap);
-        }*/
+        }
+        if(bookQuantity<=0){
+            resultMap.put("url","/ibook/buyer/book/list");
+            resultMap.put("msg","请添加至少一件商品！");
+            return new ModelAndView("common/error",resultMap);
+        }
         if (map.containsKey(bookId)){
             bookQuantity+=map.get(bookId);
         }
